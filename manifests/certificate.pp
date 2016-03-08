@@ -7,7 +7,6 @@ define ssl::certificate(
   $group = 'root',
 ) {
 
-  if $ensure == 'present' {
     file { "/etc/ssl/${name}/":
       ensure  => $ensure ? {
         present => 'directory',
@@ -22,6 +21,7 @@ define ssl::certificate(
       mode    => '0644',
     }
 
+  if $ensure == 'present' {
     file { "/etc/ssl/${name}/${private_key}":
       ensure => $ensure,
       source => "${source}/${private_key}",
@@ -38,20 +38,6 @@ define ssl::certificate(
         group  => $group,
         mode   => '0640',
       }
-    }
-  } else {
-    file { "/etc/ssl/${name}/":
-      ensure  => $ensure ? {
-        present => 'directory',
-        default => $ensure,
-      },
-      source  => $source,
-      recurse => true,
-      purge   => true,
-      force   => true,
-      owner   => $owner,
-      group   => $group,
-      mode    => '0644',
     }
   }
 }
